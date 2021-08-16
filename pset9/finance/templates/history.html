@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History of
+{% endblock %}
+
+{% block main %}
+<!-- dont like the spaces for this heading, so adding a style, local style-->
+    <style>
+        h3
+        {
+            padding-bottom: 5vh;
+        }
+    </style>
+    <h3>History</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+              <th scope="col">Symbol</th>
+              <th scope="col">Shares</th>
+              <th scope="col">Price</th>
+              <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in history %}
+
+                <tr>
+                    {% for key in row %}
+
+
+                        {% if key == "price" %}
+                            <td> {{ row[key] | usd }} </td>
+                        {% else %}
+                            <td> {{ row[key] }} </td>
+                        {% endif %}
+
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+{% endblock %}

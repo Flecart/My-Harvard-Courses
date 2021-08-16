@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+
+        <script>
+            function wrong(id)
+            {
+                let currentColor =  document.querySelector(`#\\3${id}`).style.backgroundColor;
+                /// set others to this color for now in inefficient way asap
+                for (let i = 1; i <= 5; i++)
+                {
+                    document.querySelector(`#\\3${i}`).style.backgroundColor = currentColor;
+                }
+                document.querySelector(`#\\3${id}`).style.backgroundColor = "#ff0000";
+
+                let result = document.querySelector(`#result`);
+                result.innerHTML = "Incorrect";
+                result.style.color = "red";
+            }
+
+            function right(id)
+            {
+                let currentColor =  document.querySelector(`#\\3${id}`).style.backgroundColor;
+                /// set others to this color for now in inefficient way asap
+                for (let i = 1; i <= 5; i++)
+                {
+                    document.querySelector(`#\\3${i}`).style.backgroundColor = currentColor;
+                }
+                document.querySelector(`#\\3${id}`).style.backgroundColor = "#00ff00";
+
+                let result = document.querySelector(`#result`);
+                result.innerHTML = "Correct!";
+                result.style.color = "green";
+            }
+
+
+            function checkAnswer()
+            {
+                let answer = document.querySelector('input').value;
+                if (answer.toLowerCase() === "leona")
+                {
+                    document.querySelector(`input`).style.backgroundColor = "#00ff00";
+                    let result = document.querySelector(`#result2`);
+                    result.innerHTML = "Correct!";
+                    result.style.color = "green";
+                }
+                else
+                {
+                    document.querySelector(`input`).style.backgroundColor = "#ff0000";
+                    let result = document.querySelector(`#result2`);
+                    result.innerHTML = "Incorrect";
+                    result.style.color = "red";
+                }
+
+            }
+
+            // settin gup the first part
+            document.addEventListener('DOMContentLoaded', () => {
+
+                let input = document.querySelectorAll('button');
+
+                // adding the listener to every button
+
+                for (let i = 0; i < 5; i++)
+                {
+                    let id = input[i].id;
+                    input[i].addEventListener('click', () => {
+                        if (id == 2)
+                        {
+                            right(id);
+                        }
+                        else
+                        {
+                            wrong(id);
+                        }
+                    });
+                }
+
+                // the last one, for the second part
+                input[5].addEventListener('click', () => {
+                    checkAnswer();
+                })
+
+            });
+
+        </script>
+
+    </head>
+    <body>
+
+        <div class="jumbotron">
+            <h1>Trivia! LoL :D</h1>
+        </div>
+
+        <div class="container">
+
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+                <h3>
+                    What is the total number of champions in League of Legends in April 16 2021?
+                </h3>
+                <p id="result">
+
+                </p>
+
+                <button id="1">
+                    144
+                </button>
+                <button id="2">
+                    155
+                </button>
+                <button id="3">
+                    100
+                </button>
+                <button id="4">
+                    50
+                </button>
+                <button id="5">
+                    200
+                </button>
+
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+                <h3>
+                    Which champion has the power of the sun and a lot of CC (main support role)?
+                </h3>
+                <p id="result2">
+
+                </p>
+                <form onsubmit="return false;">>
+                    <input autocomplete="off" placeholder="Answer" type="text">
+                    <button id="submit">
+                        SUBMIT
+                    </button>
+                </form>
+                <!-- TODO: Add free response question here -->
+
+            </div>
+
+        </div>
+    </body>
+</html>

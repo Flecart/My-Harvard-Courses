@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    My Portfolio
+{% endblock %}
+
+{% block main %}
+<!-- dont like the spaces for this heading, so adding a style, local styule-->
+    <style>
+        h3
+        {
+            padding-bottom: 5vh;
+        }
+        tfoot
+        {
+            font-weight: bold;
+        }
+    </style>
+    <h3>Portfolio</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+              <th scope="col">Symbol</th>
+              <th scope="col">Shares</th>
+              <th scope="col">TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in owned %}
+
+                <!-- i want to print only shares not equal to 0-->
+                {% if row["shares"] != 0 %}
+                <tr>
+                    {% for key in row %}
+
+
+                        {% if key == "total" %}
+                            <td> {{ row[key] | usd }} </td>
+                        {% else %}
+                            <td> {{ row[key] }} </td>
+                        {% endif %}
+
+                    {% endfor %}
+                </tr>
+                {% endif %}
+
+            {% endfor %}
+      </tbody>
+      <tfoot>
+          <tr>
+          {% for key in footer %}
+               {% if key == "total" %}
+                    <td> {{ footer[key] | usd }} </td>
+                {% else %}
+                    <td> {{ footer[key] }} </td>
+                {% endif %}
+          {% endfor %}
+          </tr>
+      </tfoot>
+    </table>
+{% endblock %}

@@ -1,0 +1,32 @@
+// // if true, its a source, else no,
+    // bool current_sources[candidate_count];
+    // reset_verified(current_sources);
+
+    // // checking the sources
+    // for (int i = 0; i < candidate_count; i++)
+    // {
+    //     // se nessuno punta a questo vuol dire che sia l'origine
+    //     // questa variabile stora questa informazione
+    //     bool arrow_to_me = false;
+    //     for (int j = 0; j < candidate_count; j++)
+    //     {
+    //         // se esiste una freccia che mi punta, vuol dire che non è origine
+    //         if (locked[j][i])
+    //         {
+    //             arrow_to_me = true;
+    //             break;
+    //         }
+    //     }
+    //     // se nonho una freccia a me, i è un source.
+    //     if (!arrow_to_me)
+    //     {
+    //         current_sources[i] = true;
+    //     }
+    // }
+
+    // // visiting for every source
+    // for (int i = 0; i < candidate_count; i++)
+    // {
+    //     // se è un source, allora faccio
+    //     if (current_sources[i])
+    //     {

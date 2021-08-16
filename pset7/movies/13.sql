@@ -1,0 +1,3 @@
+SELECT DISTINCT(name) FROM people WHERE id IN (SELECT person_id FROM stars WHERE movie_id IN (SELECT id FROM movies JOIN stars ON stars.movie_id = movies.id WHERE person_id = (SELECT id FROM people WHERE name = "Kevin Bacon" AND birth = 1958))) AND id != (SELECT id FROM people WHERE name = "Kevin Bacon" AND birth = 1958);
+-- Prendo il nome in modo distinto dalle persone che hanno come id quello delle star che hanno partecipato a movie il cui id ha partecipato anche una persona di nome Kevin Bacon
+-- È ID DIVERSO DA SE STESSO

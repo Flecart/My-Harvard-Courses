@@ -1,0 +1,198 @@
+image[0][0].rgbtRed = round((image[0][0].rgbtRed + image[0][1].rgbtRed + image[1][0].rgbtRed + image[1][1].rgbtRed) / 4.0);
+    image[0][0].rgbtBlue = round((image[0][0].rgbtBlue + image[0][1].rgbtBlue + image[1][0].rgbtBlue + image[1][1].rgbtBlue) / 4.0);
+    image[0][0].rgbtGreen = round((image[0][0].rgbtGreen + image[0][1].rgbtGreen + image[1][0].rgbtGreen + image[1][1].rgbtGreen) / 4.0);
+
+    image[height - 1][width - 1].rgbtRed = round((image[height - 1][width - 1].rgbtRed + image[height - 1][width - 2].rgbtRed + image[height - 2][width - 1].rgbtRed + image[height - 2][width - 2].rgbtRed) / 4.0);
+    image[height - 1][width - 1].rgbtBlue = round((image[height - 1][width - 1].rgbtRed + image[height - 1][width - 2].rgbtRed + image[height - 2][width - 1].rgbtRed + image[height - 2][width - 2].rgbtRed) / 4.0);
+    image[height - 1][width - 1].rgbtGreen = round((image[height - 1][width - 1].rgbtRed + image[height - 1][width - 2].rgbtRed + image[height - 2][width - 1].rgbtRed + image[height - 2][width - 2].rgbtRed) / 4.0);
+
+
+    image[0][width - 1].rgbtRed = round((image[0][width - 1].rgbtRed + image[0][width - 2].rgbtRed + image[1][width - 1].rgbtRed + image[1][width - 2].rgbtRed) / 4.0);
+    image[0][width - 1].rgbtBlue = round((image[0][width - 1].rgbtRed + image[0][width - 2].rgbtRed + image[1][width - 1].rgbtRed + image[1][width - 2].rgbtRed) / 4.0);
+    image[0][width - 1].rgbtGreen = round((image[0][width - 1].rgbtRed + image[0][width - 2].rgbtRed + image[1][width - 1].rgbtRed + image[1][width - 2].rgbtRed) / 4.0);
+
+    image[height - 1][0].rgbtRed = round((image[height - 1][0].rgbtRed + image[height - 1][1].rgbtRed + image[height - 2][0].rgbtRed + image[height - 2][1].rgbtRed) / 4.0);
+    image[height - 1][0].rgbtBlue = round((image[height - 1][0].rgbtRed + image[height - 1][1].rgbtRed + image[height - 2][0].rgbtRed + image[height - 2][1].rgbtRed) / 4.0);
+    image[height - 1][0].rgbtGreen = round((image[height - 1][0].rgbtRed + image[height - 1][1].rgbtRed + image[height - 2][0].rgbtRed + image[height - 2][1].rgbtRed) / 4.0);
+
+
+image[i][0].rgbtRed = round((image[i][0].rgbtRed + image[i][1].rgbtRed + image[i + 1][0].rgbtRed + image[i + 1][1].rgbtRed + image[i - 1][0].rgbtRed + image[i - 1][1].rgbtRed) / 6.0);
+        image[i][0].rgbtBlue = round((image[i][0].rgbtBlue + image[i][1].rgbtBlue + image[i + 1][0].rgbtBlue + image[i + 1][1].rgbtBlue + image[i - 1][0].rgbtBlue + image[i - 1][1].rgbtBlue) / 6.0);
+        image[i][0].rgbtGreen = round((image[i][0].rgbtGreen + image[i][1].rgbtGreen + image[i + 1][0].rgbtGreen + image[i + 1][1].rgbtGreen + image[i - 1][0].rgbtGreen + image[i - 1][1].rgbtGreen) / 6.0);
+
+        image[i][width - 1].rgbtRed = round((image[i][width - 1].rgbtRed + image[i][width - 2].rgbtRed + image[i + 1][width - 1].rgbtRed + image[i + 1][width - 2].rgbtRed + image[i - 1][width - 1].rgbtRed + image[i - 1][width - 2].rgbtRed) / 6.0);
+        image[i][width - 1].rgbtBlue = round((image[i][width - 1].rgbtBlue + image[i][width - 2].rgbtBlue + image[i + 1][width - 1].rgbtBlue + image[i + 1][width - 2].rgbtBlue + image[i - 1][width - 1].rgbtBlue + image[i - 1][width - 2].rgbtBlue) / 6.0);
+        image[i][width - 1].rgbtGreen = round((image[i][width - 1].rgbtGreen + image[i][width - 2].rgbtGreen + image[i + 1][width - 1].rgbtGreen + image[i + 1][width - 2].rgbtGreen + image[i - 1][width - 1].rgbtGreen + image[i - 1][width - 2].rgbtGreen) / 6.0);
+        
+        
+        
+        
+        
+        
+for (int i = 0; i <= 1; i++)
+    {
+        for (int j = 0; j <= 1; j++)
+        {
+            red += image[i][j].rgbtRed;
+            blue += image[i][j].rgbtBlue;
+            green += image[i][j].rgbtGreen;
+        }
+    }
+    image[0][0].rgbtRed = (int) round(red / 4.0);
+    image[0][0].rgbtBlue = (int) round(blue / 4.0);
+    image[0][0].rgbtGreen = (int) round(green / 4.0);
+
+    red = 0;
+    green = 0;
+    blue = 0;
+
+    for (int i = 0; i <= 1; i++)
+    {
+        for (int j = width - 2; j < width; j++)
+        {
+            red += image[i][j].rgbtRed;
+            blue += image[i][j].rgbtBlue;
+            green += image[i][j].rgbtGreen;
+        }
+    }
+    image[0][width - 1].rgbtRed = (int) round(red / 4.0);
+    image[0][width - 1].rgbtBlue = (int) round(blue / 4.0);
+    image[0][width - 1].rgbtGreen = (int) round(green / 4.0);
+
+    red = 0;
+    green = 0;
+    blue = 0;
+
+    for (int i = height - 2; i < height; i++)
+    {
+        for (int j = width - 2; j < width; j++)
+        {
+            red += image[i][j].rgbtRed;
+            blue += image[i][j].rgbtBlue;
+            green += image[i][j].rgbtGreen;
+        }
+    }
+    image[height - 1][width - 1].rgbtRed = (int) round(red / 4.0);
+    image[height - 1][width - 1].rgbtBlue = (int) round(blue / 4.0);
+    image[height - 1][width - 1].rgbtGreen = (int) round(green / 4.0);
+
+    red = 0;
+    green = 0;
+    blue = 0;
+
+    for (int i = height - 2; i < height; i++)
+    {
+        for (int j = 0; j <= 1; j++)
+        {
+            red += image[i][j].rgbtRed;
+            blue += image[i][j].rgbtBlue;
+            green += image[i][j].rgbtGreen;
+        }
+    }
+    image[height - 1][0].rgbtRed = (int) round(red / 4.0);
+    image[height - 1][0].rgbtBlue = (int) round(blue / 4.0);
+    image[height - 1][0].rgbtGreen = (int) round(green / 4.0);
+
+    // pixel di bordo:
+    for (int i = 1; i < height - 1; i++)
+    {
+        red = 0;
+        green = 0;
+        blue = 0;
+        // colonna bassa, creo tutte le somme
+        for (int j = 0; j <= 1; j++)
+        {
+            for (int o = i - 1; o <= i + 1; o++)
+            {
+                red += image[o][j].rgbtRed;
+                blue += image[o][j].rgbtBlue;
+                green += image[o][j].rgbtGreen;
+            }
+        }
+
+        image[i][0].rgbtRed = (int) round(red / 6.0);
+        image[i][0].rgbtBlue = (int) round(blue / 6.0);
+        image[i][0].rgbtGreen = (int) round(green / 6.0);
+
+        // altra riga, riga alta
+        red = 0;
+        green = 0;
+        blue = 0;
+
+        for (int j = width - 2; j < width; j++)
+        {
+            for (int o = i - 1; o <= i + 1; o++)
+            {
+                red += image[o][j].rgbtRed;
+                blue += image[o][j].rgbtBlue;
+                green += image[o][j].rgbtGreen;
+            }
+        }
+        image[0][width - 1].rgbtRed = (int) round(red / 6.0);
+        image[0][width - 1].rgbtBlue = (int) round(blue / 6.0);
+        image[0][width - 1].rgbtGreen = (int) round(green / 6.0);
+    }
+
+    // ora provo a farli i box e fare cicli lol
+    for (int j = 1; j < width - 1; j++)
+    {
+        red = 0;
+        green = 0;
+        blue = 0;
+        // riga bassa, creo tutte le somme
+        for (int i = 0; i <= 1; i++)
+        {
+            for (int k = j - 1; k <= j + 1; k++)
+            {
+                red += image[i][k].rgbtRed;
+                blue += image[i][k].rgbtBlue;
+                green += image[i][k].rgbtGreen;
+            }
+        }
+
+        image[0][j].rgbtRed = (int) round(red / 6.0);
+        image[0][j].rgbtBlue = (int) round(blue / 6.0);
+        image[0][j].rgbtGreen = (int) round(green / 6.0);
+
+        // altra riga, riga alta
+        red = 0;
+        green = 0;
+        blue = 0;
+
+        for (int i = height - 2; i < height; i++)
+        {
+            for (int k = j - 1; k <= j + 1; k++)
+            {
+                red += image[i][k].rgbtRed;
+                blue += image[i][k].rgbtBlue;
+                green += image[i][k].rgbtGreen;
+            }
+        }
+        image[height - 1][j].rgbtRed = (int) round(red / 6.0);
+        image[height - 1][j].rgbtBlue = (int) round(blue / 6.0);
+        image[height - 1][j].rgbtGreen = (int) round(green / 6.0);
+    }
+
+    // tutte le cose in mezzo
+    for (int i = 1; i < height - 1; i++)
+    {
+        for (int j = 1; j < width - 1; j++)
+        {
+            // calcolo il quadrato 3x3
+            red = 0;
+            green = 0;
+            blue = 0;
+            for (int o = i - 1; o <= i + 1; o++)
+            {
+                for (int k = j - 1; k <= j + 1; k++)
+                {
+                    red += image[o][k].rgbtRed;
+                    blue += image[o][k].rgbtBlue;
+                    green += image[o][k].rgbtGreen;
+                }
+            }
+            image[i][j].rgbtRed = (int) round(red / 9.0);
+            image[i][j].rgbtBlue = (int) round(blue / 9.0);
+            image[i][j].rgbtGreen = (int) round(green / 9.0);
+        }
+    }

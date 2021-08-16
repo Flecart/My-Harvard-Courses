@@ -1,0 +1,11 @@
+sort1 uses: Bubble Sort
+
+How do you know?: Because it's the slowest of the three, and the sorted one is almost the square root of the random and reversed one
+
+sort2 uses: Merge Sort
+
+How do you know?: I tested on reversed50k, sorted50k and random50k and its the fastest every time
+
+sort3 uses: Selection Sort
+
+How do you know?: Because others are taken
