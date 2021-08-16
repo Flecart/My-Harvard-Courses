@@ -1,0 +1,16 @@
+.google-form {
+    width: 50%;
+    margin: auto;
+    padding-top: 30vh;
+}
+
+.logo {
+    min-width: 4vh;
+    margin: auto;
+    width: 30vh;
+}
+
+/* overwrite bootsrap border radius */
+.form-rounded {
+    border-radius: 1rem !important;
+}
