@@ -1,0 +1,29 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Edit Page
+{% endblock %}
+
+{% block body %}
+    <h2 class="mb-3">Edit Page</h2>
+    <h3 class="mb-3">Editing page: {{ form.title.value }}</h3>
+    <form action="{% url 'edit_page' %}" method="post">
+        {% csrf_token %}
+        <!-- {{ form }} -->
+        <div class="input-group mb-4 col-6" hidden>
+            {{ form.title }}
+        </div>
+        <div class="input-group mb-4 col-6">
+            {{ form.content }}
+        </div>
+
+        {% if code != 200 %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn ml-3 btn-outline-primary">Edit Page</button>
+    </form>
+
+{% endblock %}

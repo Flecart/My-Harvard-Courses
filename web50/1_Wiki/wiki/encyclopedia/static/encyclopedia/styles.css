@@ -1,6 +1,8 @@
 body {
     margin: 0;
     background-color: white;
+    overflow-y: visible;
+    overflow-x: hidden;
 }
 
 code {

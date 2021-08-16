@@ -1,8 +1,11 @@
 import re
+import random
+from datetime import datetime
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django import forms
+
 
 def list_entries():
     """
@@ -37,9 +40,19 @@ def get_entry(title):
         return None
 
 
-class new_page_form(forms.Form):
-    title = forms.CharField(label="title", widget=forms.TextInput(attrs={'placeholder': 'Search Encyclopedia'}))
-    body = forms.CharField(widget=forms.Textarea)
+class entry_form(forms.Form):
+    title = forms.CharField(label="title", 
+            widget=forms.TextInput(
+                attrs={
+                    'placeholder': 'Page Title',
+                    'class': "form-control"
+                    }))
+
+    content = forms.CharField(label="content", widget=forms.Textarea(
+                attrs={
+                    'placeholder': 'Page Content',
+                    'class': "form-control"
+                    }))
 
 
 class search_answer():
@@ -71,3 +84,12 @@ def check_matches(title):
             answer.append(entry)
 
     return answer
+
+
+def get_random_page():
+    entries = list_entries()
+    random.seed(datetime.now())
+    random_index = random.randint(0, len(entries) - 1)
+
+    return entries[random_index]
+
