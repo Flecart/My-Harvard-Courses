@@ -39,7 +39,7 @@ def search(request):
                 "query": query,
                 "entries": search_answer.answers
             })
-        return HttpResponseRedirect(reverse('wiki') + search_answer.answers[0])
+        return HttpResponseRedirect(reverse('wiki') + '/' + search_answer.answers[0])
 
     else:
         return render(request, "encyclopedia/search.html", {

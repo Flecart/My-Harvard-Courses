@@ -1,0 +1,11 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>My watchlist</h2>
+    
+    <ul>
+    {% for listing in listings %}
+        <li>{{listing.title}} {{listing.current_bid}}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
