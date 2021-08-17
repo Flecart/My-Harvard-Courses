@@ -11,7 +11,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=MAX_LISTING_LEN)
     description = models.CharField(max_length=MAX_DESCRIPTION_LEN)
     current_bid = models.IntegerField()
-    image_link = models.CharField(max_length=MAX_DESCRIPTION_LEN, default="https://i.imgur.com/5G2zYum.png")
+    image_link = models.CharField(max_length=MAX_DESCRIPTION_LEN, default=DEF_IMAGE)
     closed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
@@ -47,7 +47,7 @@ class Bid(models.Model):
     highest_bid = models.IntegerField()
 
     def __str__(self) -> str:
-        return f"{self.id}: {self.current_bidder} in {self.listing} for {self.highest_bid}"
+        return f"{self.current_bidder} in {self.listing} for {self.highest_bid}"
 
 
 class Comment(models.Model):

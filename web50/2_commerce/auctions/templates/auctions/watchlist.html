@@ -1,11 +1,15 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/listing.html" %}
 
-{% block body %}
-    <h2>My watchlist</h2>
-    
-    <ul>
-    {% for listing in listings %}
-        <li>{{listing.title}} {{listing.current_bid}}</li>
-    {% endfor %}
-    </ul>
+
+{% block body_header %}
+My watchlist
+{% endblock %}
+
+
+{% block footer %}
+<div class="container text-center">
+    <a href="/listing">
+        <button type="submit" class="btn btn-primary">See all Listings</button>
+    </a>
+</div>
 {% endblock %}

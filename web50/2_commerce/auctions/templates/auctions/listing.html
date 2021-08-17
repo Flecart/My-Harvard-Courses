@@ -1,11 +1,67 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/index.html" %}
+{% load filters %}
 
-{% block body %}
-    <h2>All Listings</h2>
-    
-    <ul>
-    {% for listing in listings %}
-        <li>{{listing.title}} {{listing.current_bid}}</li>
-    {% endfor %}
-    </ul>
+
+{% block body_header %}
+All Listings
+{% endblock %}
+
+
+{% block listing_block %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Current Bid</th>
+            <th scope="col">Bidder</th>
+            <th scope="col">Open?</th>
+            <th scope="col">Image Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for listing in listings %}
+        <tr>
+            <th scope="row">{{ listing.id }}</th>
+            <td> <a href="listing/{{ listing.id }}"> {{ listing.title | escape }} </a></td>
+            <td> {{ listing.current_bid | usd }} </td>
+            <td> {{ listing.bidder }} </td>
+
+            <td>
+                {% if listing.closed %} 
+                <i class="bi bi-square-fill" style="color:red"></i>
+                {% else %} 
+                <i class="bi bi-square-fill text-green" style="color:green"></i>
+                {% endif %}
+            </td>
+            <td>  
+                <button type="button" class="btn btn-link no-padding" data-bs-toggle="modal" data-bs-target="#item{{ listing.id }}">
+                    See Image of {{ listing.title }}
+                </button>
+                <div class="modal fade" id="item{{ listing.id }}" tabindex="-1" aria-labelledby="item{{ listing.id }}Label" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Image of {{ listing.title | escape }} with id: {{ listing.id }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <img  class="img-thumbnail" src="{{ listing.image_link }}" alt="Image for {{ listing.title | escape }}"/>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}
+
+
+{% block footer %}
 {% endblock %}

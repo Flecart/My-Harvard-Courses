@@ -10,3 +10,6 @@ MAX_DESCRIPTION_LEN = 1000
 MAX_COMMENT_LEN = 1000
 MAX_NAME_LEN = 150
 MAX_CATEGORY_LEN = 20
+
+# default image source
+DEF_IMAGE = "https://i.imgur.com/5G2zYum.png"

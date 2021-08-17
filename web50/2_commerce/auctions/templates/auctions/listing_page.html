@@ -1,10 +1,110 @@
 {% extends "auctions/layout.html" %}
+{% load filters %}
+
 
 {% block body %}
-    <h2>Listing: {{listing.title}}</h2>
-    
-    <p>{{listing.title}} {{listing.current_bid}}</p>
-    <p>{{listing.author}} {{listing.description}}</p>
 
-    <img src={{listing.image_link}}/>
+
+    {% block alerts %} 
+        {% if success_message %} 
+        <div class="alert alert-success mb-5" role="alert">
+        {{ success_message | escape }}
+        </div>
+        {% endif %}
+
+        {% if error_message %} 
+        <div class="alert alert-danger mb-5" role="alert">
+        {{ error_message | escape}}
+        </div>
+        {% endif %}
+    {% endblock %}
+
+    
+    <div class="card m-auto mb-5" style="width: 70%;">
+        <img src="{{ listing.image_link }}" class="img-fluid img-thumbnail" alt="Image of {{ listing.title }}">
+        <div class="card-body d-flex justify-content-between">
+            <h5 class="card-title ">{{listing.title | escape}}</h5>
+            {% if user.is_authenticated and not is_on_watchlist %}
+            <form class="" action="../watchlist?id={{ listing.id }}" method="POST">
+                {% csrf_token %}
+                <input hidden name="id" value="{{ listing.id }}"/>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg"></i></button>
+            </form>
+            {% elif user.is_authenticated and is_on_watchlist %}
+            <form class="" action="../watchlist?id={{ listing.id }}" method="POST">
+                {% csrf_token %}
+                <input hidden name="id" value="{{ listing.id }}"/>
+                <button type="submit" class="btn btn-danger"><i class="bi bi-dash-lg"></i></button>
+            </form>
+            {% endif %}
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Description: {{ listing.description | escape }}</li>
+            <li class="list-group-item">Current bid: {{ listing.current_bid | usd }}</li>
+            <li class="list-group-item">Current bidder: {{ listing.bidder | filter_bidder }}</li>
+            <li class="list-group-item">Seller: {{ listing.author }}</li>
+
+        </ul>
+        <div class="card-body">
+            {% if user.is_authenticated %}
+            <form class="" action="bid" method="POST">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">$</span>
+                        {% csrf_token %}
+                        {{ bid_form }}
+                    <span class="input-group-text">.00</span>
+                    <button type="submit" class="btn btn-primary">Bid</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+        <div class="card-body d-flex justify-content-between">
+        {% if user.username|to_string == listing.author|to_string and not listing.closed%}
+            <form class="" action="close" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Close Listing</button>
+            </form>
+            <p>Open: <i class="bi bi-square-fill" style="color:green"></i></p>
+        {% elif listing.closed %}
+            <p>Open: <i class="bi bi-square-fill" style="color:red"></i></p>
+
+        {% endif %}
+        </div>
+
+    </div>
+        
+    {% block footer %}
+    <div class="col-8 d-flex flex-wrap my-5 m-auto justify-content-around">
+        {% for comment in comments %}
+            <div class="card flex-item mb-4" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ comment.author }}</h5>
+                    <p class="card-text">{{ comment.content }}</p>
+                </div>
+            </div>
+        {% empty %}
+        <div class="card flex-item" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">No Comments</h5>
+                <p class="card-text">Empty</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <form class="col-8 m-auto" action="comment" method="POST">
+        {% csrf_token %}
+        {{ comment_form }}
+        <button type="submit" class="btn btn-primary">Comment</button>
+    </form>
+
+    {% endblock %}
+      <!-- TODO error message -->
+      <!-- 
+          If the user is signed in, the user should be able to add the item to their “Watchlist.” If the item is already on the watchlist, the user should be able to remove it.
+      If the user is signed in, the user should be able to bid on the item. The bid must be at least as large as the starting bid, and must be greater than any other bids that have been placed (if any). If the bid doesn’t meet those criteria, the user should be presented with an error.
+      If the user is signed in and is the one who created the listing, the user should have the ability to “close” the auction from this page, which makes the highest bidder the winner of the auction and makes the listing no longer active.
+      If a user is signed in on a closed listing page, and the user has won that auction, the page should say so.
+      Users who are signed in should be able to add comments to the listing page. The listing page should display all comments that have been made on the listing. -->
+      <!-- comments -->
 {% endblock %}
