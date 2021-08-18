@@ -109,20 +109,22 @@ def listing_page(request, listing_id):
 @login_required(redirect_field_name='login')
 def create_listing(request):
     if request.method == "POST":
-        form = forms.ListingForm(request.POST)
+        print(request.POST)
+        form = forms.ListingForm(request.POST, categories_list=util.get_categories())
+        print(form)
 
         if form.is_valid():
             util.save_listing(form, request.session['user_id'])
             return HttpResponseRedirect(reverse('index'))
         else:
+            # print(form)
             return render(request, "auctions/create_listing.html", {
                 "form": form,
                 "message": "Invalid Input"
             })
     
     return render(request, "auctions/create_listing.html", {
-        "form": forms.ListingForm(util.get_categories()),
-
+        "form": forms.ListingForm(categories_list=util.get_categories()),
     })
 
 
@@ -203,3 +205,19 @@ def comment(request):
         return HttpResponseRedirect(reverse('listing') + f"/{listing_id}?error_message={message}")
     
     return HttpResponseRedirect(reverse('index'))
+
+
+def category(request):
+    categories = [item[0] for item in util.get_categories()]
+
+    return render(request, "auctions/category.html", {
+        "categories": categories
+    })
+
+
+def category_name(request, category_name):
+    listings = util.create_listing(category=category_name)
+    print(listings)
+    return render(request, "auctions/category_page.html", {
+        "listings": listings
+    })

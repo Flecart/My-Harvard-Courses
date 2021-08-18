@@ -1,16 +1,12 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/index.html" %}
 {% load filters %}
 
-
 {% block body_header %}
-Active Listings
+Category listings
 {% endblock %}
 
 
-{% block body %}
-    
-    <div class="container">
-        {% block listing_block %}
+{% block listing_block %}
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -19,14 +15,13 @@ Active Listings
                     <th scope="col">Current Bid</th>
                     <th scope="col">Bidder</th>
                     <th scope="col">Image Link</th>
-                    <th scope="col">Description</th>
                 </tr>
             </thead>
             <tbody>
                 {% for listing in listings %}
                 <tr>
                     <th scope="row">{{ listing.id }}</th>
-                    <td> <a href="listing/{{ listing.id }}"> {{ listing.title | escape }} </a></td>
+                    <td> <a href="/listing/{{ listing.id }}"> {{ listing.title | escape }} </a></td>
                     <td> {{ listing.current_bid | usd }} </td>
                     <td> {{ listing.bidder | filter_bidder }} </td>
 
@@ -52,42 +47,9 @@ Active Listings
                             </div>
                         </div>
                     </td>
-                    <td>  
-                        <button type="button" class="btn btn-link no-padding" data-bs-toggle="modal" data-bs-target="#item_des{{ listing.id }}">
-                            See Description of {{ listing.title }}
-                        </button>
-                        <div class="modal fade" id="item_des{{ listing.id }}" tabindex="-1" aria-labelledby="item{{ listing.id }}Label" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Description {{ listing.title | escape }} with id: {{ listing.id }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p> {{ listing.description }} </p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
                 </tr>
                 {% endfor %}
 
             </tbody>
           </table>
         {% endblock %}
-          
-    </div>
-
-    {% block footer %}
-    <div class="container text-center">
-        <a href="/listing">
-            <button type="submit" class="btn btn-primary">See all Listings</button>
-        </a>
-    </div>
-    {% endblock %}
-
-{% endblock %}

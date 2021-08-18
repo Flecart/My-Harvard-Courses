@@ -1,5 +1,5 @@
 import requests
-from .models import Bid, Category, User, Listing, Watchlist, Comment
+from .models import Bid, Category, ListingCategory, User, Listing, Watchlist, Comment
 from . import validators
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -9,9 +9,17 @@ def save_listing(form, user_id) -> None:
     description = form.cleaned_data['description']
     starting_bid = form.cleaned_data['starting_bid']
     url = validators.url_cleaner(form.cleaned_data['url'])
+    category = form.cleaned_data['categories']
     user = User.objects.get(pk=user_id)
 
-    Listing(author=user, title=title, description=description, current_bid=starting_bid, image_link=url).save()
+    listing = Listing(author=user, title=title, description=description, current_bid=starting_bid, image_link=url)
+    listing.save()
+    save_listing_category(category, listing)
+
+
+def save_listing_category(category, listing):
+    category_obj = Category.objects.get(name=category)
+    ListingCategory(category=category_obj, listing=listing).save()
 
 
 def is_url_image(image_url):
@@ -48,18 +56,26 @@ def add_bidders(queryset, is_single=False):
     return queryset
 
 
-def create_listing(user_id=0, only_watchlist=False, only_active=False):
+def create_listing(user_id=0, only_watchlist=False, only_active=False, category=None):
     """
     only_active gets only the opened listings
     only_watchlist gives the list of Listings in watchlist
     if these two are false gives every listing
     """
+    if category:
+        category_obj = Category.objects.get(name=category)
+
+        listings_id = []
+        for item in ListingCategory.objects.filter(category=category_obj):
+            listings_id.append(item.listing.id)
+        listings = add_bidders(Listing.objects.filter(pk__in=listings_id))
+        return listings
+
     if only_active:
         return add_bidders(Listing.objects.filter(closed=False))
 
     if not only_watchlist:
-        listings = add_bidders(Listing.objects.all())
-        return listings
+        return add_bidders(Listing.objects.all())
 
     else:
         user = User.objects.get(pk=user_id)

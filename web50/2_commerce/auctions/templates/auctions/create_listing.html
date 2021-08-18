@@ -21,19 +21,12 @@ Create Listing
             <div class="input-group mb-4 col-6">
                 {{ form.url }}
             </div>
-            
+            <div class="input-group mb-1 col-6">
+                Select Categories
+            </div>
             <div class="input-group mb-4 col-6">
                 {{ form.categories }}
             </div>
-            <!-- <select class="mdb-select md-form" multiple>
-                <option value="" disabled selected>Choose your country</option>
-                <option value="1">USA</option>
-                <option value="2">Germany</option>
-                <option value="3">France</option>
-                <option value="4">Poland</option>
-                <option value="5">Japan</option>
-            </select> -->
-
             {% if message %}
             <div class="alert alert-danger" role="alert">
                 {{ message }}

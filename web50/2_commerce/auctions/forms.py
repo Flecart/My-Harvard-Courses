@@ -6,9 +6,10 @@ from . import util
 
 class ListingForm(forms.Form):
 
-    def __init__(self, choices_list, *args, **kwargs):   
+    def __init__(self, *args, categories_list=None, **kwargs):   
         super(ListingForm, self).__init__(*args, **kwargs)
-        self.fields['categories'].choices = choices_list
+        if categories_list:
+            self.fields['categories'].choices = categories_list
 
     title = forms.CharField(
         max_length=MAX_LISTING_LEN, 
@@ -40,8 +41,11 @@ class ListingForm(forms.Form):
             "placeholder": "Url to image (not required)"
         }))
 
-    categories = forms.MultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple(),
+    categories = forms.ChoiceField(
+        required=False,
+        widget=forms.Select( attrs={
+            "class": "form-select"
+        })
     )
 
 

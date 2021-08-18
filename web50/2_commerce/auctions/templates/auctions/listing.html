@@ -25,7 +25,7 @@ All Listings
             <th scope="row">{{ listing.id }}</th>
             <td> <a href="listing/{{ listing.id }}"> {{ listing.title | escape }} </a></td>
             <td> {{ listing.current_bid | usd }} </td>
-            <td> {{ listing.bidder }} </td>
+            <td> {{ listing.bidder | filter_bidder }} </td>
 
             <td>
                 {% if listing.closed %} 
