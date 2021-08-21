@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Post
+from .models import User, Post, Follow
 
 
 def index(request):
@@ -78,3 +78,23 @@ def post(request):
         return HttpResponseRedirect(reverse("index"))
 
     return HttpResponseRedirect(reverse("index"))
+
+
+def profile(request, username):
+    user = User.objects.get(username=username)
+    posts = Post.objects.filter(user=user).order_by("-timestamp").all()
+
+    # check could be prolly broken with a user named AnonymousUser
+    can_follow = not str(request.user) == username
+    
+    followed = Follow.objects.filter(followed=user).count()
+    followers = Follow.objects.filter(follower=user).count()
+
+    return render(request, "network/profile.html", {
+        "user": user,
+        "followed": followed,
+        "followers": followers,
+        "posts": [post.serialize() for post in posts],
+        "can_follow": can_follow
+    })
+

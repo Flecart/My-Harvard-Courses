@@ -1,0 +1,33 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+<h1 class="col-6 m-auto p-0"> {{ user }} </h1>
+
+<p>Followed {{ followed }}</p>
+<p>Followers {{ followed }}</p>
+
+{% if can_follow %} 
+
+Follow
+
+{% endif %}
+
+{% for post in posts %} 
+
+<div class="mb-4">
+    <div class="card col-6 m-auto p-0">
+        <div class="card-header">
+            <strong>{{ post.user }}</strong>
+            {{ post.timestamp }}
+            {{ post.likes }}
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ post.body }}</p>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}

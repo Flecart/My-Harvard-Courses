@@ -1,11 +1,36 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-<form action="{% url 'post' %}" method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        <textarea row=3 class="form-control" autofocus type="text" name="body" placeholder="Post"></textarea>
+
+<h1 class="col-6 m-auto p-0"> All posts </h1>
+
+{% if user.is_authenticated %}
+<div class="my-4">
+    <form action="{% url 'post' %}" method="post" class="col-6 m-auto p-0">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea row=3 class="form-control" autofocus type="text" name="body" placeholder="Post"></textarea>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Post">
+    </form>
+</div>
+{% endif %}
+
+{% for post in posts %} 
+
+<div class="mb-4">
+    <div class="card col-6 m-auto p-0">
+        <div class="card-header">
+            <a href="/profile/{{post.user}}"><strong>{{ post.user }}</strong></a>
+            {{ post.timestamp }}
+            {{ post.likes }}
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ post.body }}</p>
+        </div>
     </div>
-    <input class="btn btn-primary" type="submit" value="Post">
-</form>
+</div>
+
+{% endfor %}
+
 {% endblock %}
