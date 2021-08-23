@@ -17,10 +17,7 @@ from django.db.models import F
 PAGE_SIZE = 2
 
 def index(request):
-    posts = Post.objects.all()
-    return render(request, "network/index.html", {
-        "posts": [post.serialize() for post in posts]
-    })
+    return render(request, "network/index.html")
 
 
 def login_view(request):
@@ -40,14 +37,6 @@ def login_view(request):
                 "message": "Invalid username and/or password."
             })
     else:
-
-
-        # posts = [post.serialize() for post in posts]
-
-        # p = Paginator(posts, PAGE_SIZE)
-        # has_next = 
-
-
         return render(request, "network/login.html")
 
 
@@ -88,17 +77,6 @@ def register(request):
 def profile(request, username):
     user = User.objects.get(username=username)
 
-    # pagination and posts
-    posts = Post.objects.filter(user=user).order_by("-timestamp").all()
-    posts = [post.serialize() for post in posts]
-
-    p = Paginator(posts, PAGE_SIZE)
-    # has_next = 
-
-    # check could be prolly broken with a user named AnonymousUser
-    can_follow = not str(request.user) == username
-    can_unfollow = bool(Follow.objects.filter(followed=User.objects.get(username=username)))
-
     # gets number of followers
     followers = Follow.objects.filter(followed=user).count()
     followed = Follow.objects.filter(follower=user).count()
@@ -109,9 +87,6 @@ def profile(request, username):
         "user": user,
         "followed": followed,
         "followers": followers,
-        "posts": posts,
-        "can_follow": can_follow,
-        "can_unfollow": can_unfollow
     })
 
 
@@ -148,25 +123,11 @@ def following(request):
 
         return HttpResponseRedirect(reverse("index"))
 
-    
-    user = request.user
+    return render(request, "network/following.html")
 
-    # getting the posts of the followed people
-    followed = Follow.objects.filter(follower=user)
-    posts = []
-
-    # TODO: make tests for this
-    for person_followed_key in followed.iterator():
-        this_posts = Post.objects.filter(user=person_followed_key.followed)
-        posts += [post.serialize() for post in this_posts]
-
-    return render(request, "network/following.html", {
-        "posts": posts
-    })
 
 # IMPORTANT FIELDS IN REQUEST:
 # Author, followers, all
-
 def get_posts(request):
 
     if request.method != "POST":
