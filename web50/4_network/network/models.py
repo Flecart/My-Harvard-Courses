@@ -15,13 +15,17 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "user": self.user,
+            "user": str(self.user),
             "body": self.body,
             "likes": self.likes,
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
         }
 
+class Likes(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="liker")
+    post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="liked_post")
 
 class Follow(models.Model):
     followed = models.ForeignKey("User", on_delete=models.CASCADE, related_name="followed")
     follower = models.ForeignKey("User", on_delete=models.CASCADE, related_name="follower")
+

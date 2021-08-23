@@ -1,30 +1,13 @@
 {% extends "network/layout.html" %}
 
+
 {% block body %}
 
-<h1 class="col-6 m-auto p-0"> {{ user }} </h1>
-
-<div class="col-6 m-auto p-0">
-    <p >Followed {{ followed }}</p>
-    <p >Followers {{ followers }}</p>
-
-    {% if can_follow %} 
-
-    <form action="{% url 'following' %}" method="POST" class="form-group">
-        {% csrf_token %}
-        <input hidden name="followed" value="{{user}}"/>
-        <button type="submit" class="btn btn-primary">follow</button>
-    </form>
-
-    {% endif %}
-</div>
-
-<div id="post-profile">
+<div id="post-followers">
 
 </div>
 
 <script>
-
     let loading = true;
     let current_page = 1;
     fetch("/api/get_posts", {
@@ -33,7 +16,7 @@
         },
         method: "POST",
         body: JSON.stringify({
-            author: `{{ user }}`,
+            following: true,
             page: current_page
         })
     })
@@ -43,15 +26,14 @@
             // TODO: display some kind of errors
         }
 
-        const cards = document.querySelector("#post-profile");
+        const cards = document.querySelector("#post-followers");
         cards.innerHTML = "";
-        console.log(data.posts)
         data['posts'].forEach(post => {
             cards.innerHTML += `
             <div class="mb-4">
                 <div class="card col-6 m-auto p-0">
                     <div class="card-header">
-                        <strong> ${post.user}</strong>
+                        <a href="/profile/${post.user}"><strong> ${post.user}</strong></a>
                         ${ post.timestamp }
                         ${ post.likes }
                     </div>
@@ -62,10 +44,24 @@
             </div>
             `
         });
-
+        
         if (data['posts'].length == 0) {
-            cards.innerHTML = "No posts by this user";
-        };
+            cards.innerHTML = `
+            <div class="my-4">
+                <div class="col-6 m-auto p-0">
+                    <p>
+                        You aren't following anybody
+                    </p>
+                    <a href="/">
+                        <button class="btn btn-primary">Return to home</button>
+                    </a>
+                </div>
+            </div>
+            `
+        }
+        
+
     })
 </script>
+
 {% endblock %}

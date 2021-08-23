@@ -102,7 +102,7 @@ function show_email(id) {
           })
         })
 
-        load_mailbox('inbox')
+        load_mailbox('sent')
       })
 
       document.querySelector(`#reply`).addEventListener('click', () => {
@@ -142,7 +142,6 @@ function send_mail() {
 function show(field_id) {
 
   document.querySelector("#alert").hidden = true
-  // history.pushState({mailbox: "compose"}, "", "compose")
 
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
@@ -216,6 +215,7 @@ function show_mailbox(mailbox) {
 
   })
 }
+
 // REACT FUNCTIONS, but they didnt work somehow
 
 // function Mail(props) {
