@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<h1 class="col-6 m-auto p-0"> {{ user }} </h1>
+<h1 class="col-6 m-auto p-0"> {{ profile_user }} </h1>
 
 <div class="col-6 m-auto p-0">
     <p >Followed {{ followed }}</p>
@@ -12,14 +12,14 @@
 
     <form action="{% url 'following' %}" method="POST" class="form-group">
         {% csrf_token %}
-        <input hidden name="followed" value="{{user}}"/>
+        <input hidden name="followed" value="{{profile_user}}"/>
         <button type="submit" class="btn btn-primary">follow</button>
     </form>
 
     {% endif %}
 </div>
 
-<div id="post-profile">
+<div id="post">
 
 </div>
 
@@ -33,39 +33,11 @@
         },
         method: "POST",
         body: JSON.stringify({
-            author: `{{ user }}`,
+            author: `{{ profile_user }}`,
             page: current_page
         })
     })
     .then(response => response.json())
-    .then(data => {
-        if (data.hasOwnProperty("error")) {
-            // TODO: display some kind of errors
-        }
-
-        const cards = document.querySelector("#post-profile");
-        cards.innerHTML = "";
-        console.log(data.posts)
-        data['posts'].forEach(post => {
-            cards.innerHTML += `
-            <div class="mb-4">
-                <div class="card col-6 m-auto p-0">
-                    <div class="card-header">
-                        <strong> ${post.user}</strong>
-                        ${ post.timestamp }
-                        ${ post.likes }
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">${ post.body }</p>
-                    </div>
-                </div>
-            </div>
-            `
-        });
-
-        if (data['posts'].length == 0) {
-            cards.innerHTML = "No posts by this user";
-        };
-    })
+    .then(data => showData(data)) // IMPORTED FROM JAVSCRIPT.JS
 </script>
 {% endblock %}

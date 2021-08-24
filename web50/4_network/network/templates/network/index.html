@@ -16,61 +16,105 @@
 </div>
 {% endif %}
 
+<div id="edit-zone" class="my-4" hidden>
+    <div class="col-6 m-auto p-0">
+        <div class="form-group">
+            <textarea id="edit-textarea" row=3 class="form-control" autofocus type="text" name="body" placeholder="Post"></textarea>
+        </div>
+        <input id="edit-button" class="btn btn-primary" type="submit" value="Save Edit">
+    </div>
+</div>
 
-<div id="post-all">
+<div id="post">
 
 </div>
 
+<div class="col-6 m-auto p-0">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <button type="button" class="btn page-link" id="previous" aria-label="Previous" disabled>
+                <span aria-hidden="true">Previous</span>
+                </button>
+            </li>
+            <li class="page-item">
+                <button type="button" class="btn page-link" id="next" aria-label="Next">
+                <span aria-hidden="true">Next</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <div>
+        <p>Currently on page <span id="page-number"> 1</span></p>
+    </div>
+</div>
 <script>
     let loading = true;
     let current_page = 1;
+
     fetch("/api/get_posts", {
         headers: {
             'X-CSRFToken': getCookie('csrftoken')
         },
         method: "POST",
         body: JSON.stringify({
-            following: true,
+            all: true,
             page: current_page
         })
     })
     .then(response => response.json())
-    .then(data => {
-        if (data.hasOwnProperty("error")) {
-            // TODO: display some kind of errors
-        }
+    .then(data => showData(data))  // IMPORTED FROM JAVSCRIPT.JS
 
-        const cards = document.querySelector("#post-all");
-        cards.innerHTML = "";
-        data['posts'].forEach(post => {
-            cards.innerHTML += `
-            <div class="mb-4">
-                <div class="card col-6 m-auto p-0">
-                    <div class="card-header">
-                        <a href="/profile/${post.user}"><strong> ${post.user}</strong></a>
-                        ${ post.timestamp }
-                        ${ post.likes }
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">${ post.body }</p>
-                    </div>
-                </div>
-            </div>
-            `
-        });
-        
-        if (data['posts'].length == 0) {
-            cards.innerHTML = `
-            <div class="my-4">
-                <div class="col-6 m-auto p-0">
-                    <p>
-                        No posts
-                    </p>
-                </div>
-            </div>
-            `
-        }
-        
+    
+    // fetching the new posts with current page:
+    // needs current_page global to work, don want to use funcitons...
+    document.addEventListener("DOMContentLoaded", () => {
+        const previous = document.querySelector("#previous");
+        const next = document.querySelector("#next");
+        const page = document.querySelector("#page-number");
+
+        previous.addEventListener('click', () => {
+            fetch("/api/get_posts", {
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    all: true,
+                    page: current_page - 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showData(data)
+                if (!data.hasOwnProperty("error")) {
+                    current_page -= 1;
+                    page.innerHTML = `${current_page} / ${data['total_pages']}`
+                }
+            }) 
+        })
+
+        next.addEventListener('click', () => {
+            fetch("/api/get_posts", {
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    all: true,
+                    page: current_page + 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showData(data)
+                if (!data.hasOwnProperty("error")) {
+                    current_page += 1;
+                    page.innerHTML = `${current_page} / ${data['total_pages']}`
+                }
+            }) 
+        })
 
     })
 </script>

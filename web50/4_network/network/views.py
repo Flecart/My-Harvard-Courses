@@ -11,8 +11,6 @@ from django.http import JsonResponse
 import json
 
 from .models import User, Post, Follow, Likes
-# https://docs.djangoproject.com/en/dev/topics/db/queries/
-from django.db.models import F
 
 PAGE_SIZE = 2
 
@@ -72,8 +70,6 @@ def register(request):
         return render(request, "network/register.html")
 
 
-
-
 def profile(request, username):
     user = User.objects.get(username=username)
 
@@ -81,12 +77,16 @@ def profile(request, username):
     followers = Follow.objects.filter(followed=user).count()
     followed = Follow.objects.filter(follower=user).count()
 
-    
+     # check could be prolly broken with a user named AnonymousUser
+    can_follow = not str(request.user) == username
+    can_unfollow = bool(Follow.objects.filter(followed=User.objects.get(username=username)))
 
     return render(request, "network/profile.html", {
-        "user": user,
+        "profile_user": user,
         "followed": followed,
         "followers": followers,
+        "can_follow": can_follow,
+        "can_unfollow": can_unfollow
     })
 
 
@@ -135,6 +135,7 @@ def get_posts(request):
                 "error": "Only Post request supported."
             }, status=400)
 
+    user = request.user
     body = json.loads(request.body)
     active_states = 0
 
@@ -165,62 +166,114 @@ def get_posts(request):
         current_page_number = body['page'] if 'page' in body  else 1
         current_page = pages.page(current_page_number)
 
-        return JsonResponse({
-            "posts": [post.serialize() for post in current_page],
-            "has_next": current_page.has_next(),
-            "has_previous": current_page.has_previous(),
-            "total_pages": pages.num_pages
-        })
 
     if active_states == 2:
         user = request.user
 
         # getting the posts of the followed people
         followed = [element.followed for element in Follow.objects.filter(follower=user)]
-        posts = Post.objects.filter(user__in=followed)
+        posts = Post.objects.filter(user__in=followed).order_by("-timestamp").all()
 
         pages = Paginator(posts, PAGE_SIZE)
 
         current_page_number = body['page'] if 'page' in body  else 1
         current_page = pages.page(current_page_number)
 
-        return JsonResponse({
-            "posts": [post.serialize() for post in current_page],
-            "has_next": current_page.has_next(),
-            "has_previous": current_page.has_previous(),
-            "total_pages": pages.num_pages
-        })
 
     if active_states == 4:
-        posts = Post.objects.all()
+        posts = Post.objects.all().order_by("-timestamp").all()
         pages = Paginator(posts, PAGE_SIZE)
 
         current_page_number = body['page'] if 'page' in body  else 1
         current_page = pages.page(current_page_number)
-        return JsonResponse({
-            "posts": [post.serialize() for post in current_page],
-            "has_next": current_page.has_next(),
-            "has_previous": current_page.has_previous(),
-            "total_pages": pages.num_pages
-        })
+
+    posts = [post.serialize() for post in current_page]
+
+    # add the possibility to like if current user has liked this or not
+    # add editing possibilities (they are double checked later)
+    for post in posts:
+        post['is_liked'] = is_liked(post['id'], user)
+        post['can_edit'] = can_edit(post['user'], user)
+
+    return JsonResponse({
+        "posts": posts,
+        "has_next": current_page.has_next(),
+        "has_previous": current_page.has_previous(),
+        "total_pages": pages.num_pages
+    })
 
 
 @login_required(redirect_field_name='login')
 def like(request):
-    if request.method != "POST":
+    if request.method != "PUT":
         return JsonResponse({
-                "error": "Only Post request supported."
+                "error": "Only PUT request supported."
             }, status=400)
 
     body = json.loads(request.body)
     user = request.user
 
-    if not 'post' in body:
+    if not 'post_id' in body:
         return JsonResponse({
             "error": "couldn't find post id"
         }, status=400)
 
-    post = Post.objects.get(pk=body['post'])
+    post_id = body['post_id']
+    post = Post.objects.get(pk=post_id)
 
-    if Likes.objects.filter(post):
-        pass
+    if is_liked(post_id, user):
+        post.likes -= 1
+        Likes.objects.filter(user=user, post__id=post_id).delete()
+    else:
+        post.likes += 1
+        Likes(user=user, post=post).save()
+
+    post.save()
+    return JsonResponse({
+        "message": "OK"
+    }, status=200)
+        
+
+@login_required(redirect_field_name='login')
+def edit(request):
+    if request.method != "POST":
+        return JsonResponse({
+            "error": "Only Post request supported."
+        }, status=400)
+
+    user = request.user
+    body = json.loads(request.body)
+    if 'post_id' not in body or 'body' not in body:
+        return JsonResponse({
+            "error": "Bad request"
+        }, status=400)
+
+    post = Post.objects.get(pk=body['post_id'])
+    if post.user != user:
+        return JsonResponse({
+            "error": "You can't modify this post."
+        }, status=403)
+
+    # if everything is fine go on in modifying the post
+    post.body = body['body']
+    post.save()
+
+    return JsonResponse({
+        "message": "You are rocking with these posts"
+    }, status=200)
+
+
+# utils
+def is_liked(post_id, user):
+    query = Likes.objects.filter(user=user, post__id=post_id)
+    if query.count() > 0:
+        return True
+    else:
+        return False
+
+
+def can_edit(user, request_user):
+    if user == str(request_user):
+        return True
+    else:
+        return False
