@@ -16,7 +16,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-
 function showData(data) {
     console.log(data)
     if (data.hasOwnProperty("error")) {
@@ -115,7 +114,7 @@ function showData(data) {
                 edit_button = document.querySelector("#edit-button");
                 edit_button.onclick = () => {
                     let new_body = document.querySelector("#edit-textarea").value;
-                    console.log(`${post.id} edit confirm button was clicked`)
+
                     // requesting to the server:
                     fetch("api/edit", {
                         headers: {
@@ -135,8 +134,6 @@ function showData(data) {
                     document.querySelector("#edit-zone").hidden = true;
                 }
             }
-
-           
         }
 
     });
@@ -174,3 +171,6 @@ function showData(data) {
         previous.disabled = false;
     }
 }
+
+
+

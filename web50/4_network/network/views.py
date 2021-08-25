@@ -77,7 +77,7 @@ def profile(request, username):
     followers = Follow.objects.filter(followed=user).count()
     followed = Follow.objects.filter(follower=user).count()
 
-     # check could be prolly broken with a user named AnonymousUser
+    # check could be prolly broken with a user named AnonymousUser
     can_follow = not str(request.user) == username
     can_unfollow = bool(Follow.objects.filter(followed=User.objects.get(username=username)))
 
@@ -221,6 +221,9 @@ def like(request):
     post_id = body['post_id']
     post = Post.objects.get(pk=post_id)
 
+    # NOTE: this kind of update could fail? because the post and likes are updated separatedly
+    # if in some other script i just update one, they will mismatch, and a lot if i continue.
+    # this is why i should only update here.?
     if is_liked(post_id, user):
         post.likes -= 1
         Likes.objects.filter(user=user, post__id=post_id).delete()

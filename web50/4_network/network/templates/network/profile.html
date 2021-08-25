@@ -13,7 +13,14 @@
     <form action="{% url 'following' %}" method="POST" class="form-group">
         {% csrf_token %}
         <input hidden name="followed" value="{{profile_user}}"/>
-        <button type="submit" class="btn btn-primary">follow</button>
+        <button type="submit" class="btn btn-primary">
+            {% if can_unfollow %} 
+            Unfollow
+            {% else %}
+            Follow
+            {% endif %}
+            
+        </button>
     </form>
 
     {% endif %}
@@ -22,7 +29,26 @@
 <div id="post">
 
 </div>
+<div class="col-6 m-auto p-0">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <button type="button" class="btn page-link" id="previous" aria-label="Previous" disabled>
+                <span aria-hidden="true">Previous</span>
+                </button>
+            </li>
+            <li class="page-item">
+                <button type="button" class="btn page-link" id="next" aria-label="Next">
+                <span aria-hidden="true">Next</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
 
+    <div>
+        <p>Currently on page <span id="page-number"> 1</span></p>
+    </div>
+</div>
 <script>
 
     let loading = true;
@@ -39,5 +65,55 @@
     })
     .then(response => response.json())
     .then(data => showData(data)) // IMPORTED FROM JAVSCRIPT.JS
+
+    // i don t know why, but if i put this in javascript.js doesn't work ani more
+    document.addEventListener("DOMContentLoaded", () => {
+        const previous = document.querySelector("#previous");
+        const next = document.querySelector("#next");
+        const page = document.querySelector("#page-number");
+
+        previous.addEventListener('click', () => {
+            fetch("/api/get_posts", {
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    all: true,
+                    page: current_page - 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showData(data)
+                if (!data.hasOwnProperty("error")) {
+                    current_page -= 1;
+                    page.innerHTML = `${current_page} / ${data['total_pages']}`
+                }
+            }) 
+        })
+
+        next.addEventListener('click', () => {
+            fetch("/api/get_posts", {
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    all: true,
+                    page: current_page + 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showData(data)
+                if (!data.hasOwnProperty("error")) {
+                    current_page += 1;
+                    page.innerHTML = `${current_page} / ${data['total_pages']}`
+                }
+            }) 
+        })
+
+    })
 </script>
 {% endblock %}
